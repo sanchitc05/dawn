@@ -11,6 +11,19 @@
   "sections": {
     "hero_before_after": {
       "type": "hero-before-after",
+      "blocks": {
+        "slide_Kb3RrW": {
+          "type": "slide",
+          "settings": {
+            "before_image": "shopify://shop_images/Gemini_Generated_Image_zbo51xzbo51xzbo5.png",
+            "after_image": "shopify://shop_images/Gemini_Generated_Image_fhbqi1fhbqi1fhbq.png",
+            "headline": "Bring Sunlight to Spaces Where it is Not Possible to Have it"
+          }
+        }
+      },
+      "block_order": [
+        "slide_Kb3RrW"
+      ],
       "settings": {}
     },
     "intro_statement": {
