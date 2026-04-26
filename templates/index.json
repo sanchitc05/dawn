@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero_before_after": {
@@ -6,39 +15,67 @@
     },
     "intro_statement": {
       "type": "intro-statement",
-      "settings": {}
+      "settings": {
+        "heading": "The Future of Indoor Lighting.",
+        "body_text": "SUNROOOF is the worlds first wellness lighting technology that brings the experience and benefits of sunlight inside any space through advanced optics, special lenses and AI. Transforming dull, dark and lifeless areas to beautiful sunlit courtyard experiences."
+      }
     },
     "video_features": {
       "type": "video-features",
-      "settings": {}
+      "settings": {
+        "heading": "Three Reasons why SUNROOOF looks and feels like real sunlight"
+      }
     },
     "wellness_benefits": {
       "type": "wellness-benefits",
-      "settings": {}
+      "settings": {
+        "section_heading": "Lighting that brings health and wellness",
+        "intro_text": "We spend 90% of our time indoors, missing all the vital benefits of sunlight. SUNROOOF's patented lighting technology brings all the psychological benefits inside indoors such as better mood, more energy, and enhanced productivity."
+      }
     },
     "cta_banner": {
       "type": "cta-banner",
-      "settings": {}
+      "settings": {
+        "heading": "Ready to elevate your space?",
+        "button_1_label": "Book Now",
+        "button_1_link": "",
+        "button_2_label": "EXPLORE ALL VARIANTS",
+        "button_2_link": ""
+      }
     },
     "space_gallery": {
       "type": "space-gallery",
-      "settings": {}
+      "settings": {
+        "heading": "Versatile for Every Space",
+        "subtext": "Whether creating a cozy, sunlit ambiance at home or a vibrant, well-lit workspace, SUNROOOF adapts to any environment with ease."
+      }
     },
     "courtyard_tabs": {
       "type": "courtyard-tabs",
-      "settings": {}
+      "settings": {
+        "heading": "Courtyard experience anywhere",
+        "subtext": "Explore how SUNROOOF transforms different environments."
+      }
     },
     "product_type_cards": {
       "type": "product-type-cards",
-      "settings": {}
+      "settings": {
+        "heading": "Ceilings and windows we got both covered"
+      }
     },
     "controls_carousel": {
       "type": "controls-carousel",
-      "settings": {}
+      "settings": {
+        "heading": "Control The SUNROOF Manually",
+        "subtext": "Connect via Wi-Fi, adjust with a premium-finish remote, or manage seamlessly through the SUNROOOF app on iOS and Android and SUNROOOF Controller."
+      }
     },
     "gallery_strip": {
       "type": "gallery-strip",
-      "settings": {}
+      "settings": {
+        "heading": "SUNROOOF in Real Spaces",
+        "gallery_link": ""
+      }
     },
     "trusted_by": {
       "type": "trusted-by",
@@ -46,7 +83,9 @@
     },
     "testimonials": {
       "type": "testimonials",
-      "settings": {}
+      "settings": {
+        "stat_text": "600+ customers and 800+ sites delivered"
+      }
     }
   },
   "order": [
