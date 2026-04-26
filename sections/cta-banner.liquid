@@ -1,0 +1,65 @@
+<div class="cta-banner" style="background-color: #0d0d0d; padding: 120px 60px; text-align: center;">
+  <div class="cta-banner__inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="cta-banner__heading" style="color: #fff; font-size: 3rem; font-weight: 300; margin: 0 0 40px 0;">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+    
+    <div class="cta-banner__buttons" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      {% if section.settings.button_1_label != blank %}
+        <a href="{{ section.settings.button_1_link | default: '#' }}" class="cta-banner__btn cta-banner__btn--primary" style="background-color: #fff; color: #000; padding: 14px 40px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.1em; text-decoration: none; display: inline-block;">
+          {{ section.settings.button_1_label }}
+        </a>
+      {% endif %}
+      
+      {% if section.settings.button_2_label != blank %}
+        <a href="{{ section.settings.button_2_link | default: '#' }}" class="cta-banner__btn cta-banner__btn--secondary" style="background-color: transparent; color: #fff; border: 1px solid #fff; padding: 14px 40px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.1em; text-decoration: none; display: inline-block;">
+          {{ section.settings.button_2_label }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CTA Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ready to elevate your space?"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "Button 1 Label",
+      "default": "Book Now"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Button 1 Link"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Button 2 Label",
+      "default": "EXPLORE ALL VARIANTS"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Button 2 Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA Banner",
+      "category": "Call to Action"
+    }
+  ]
+}
+{% endschema %}

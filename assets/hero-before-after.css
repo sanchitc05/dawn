@@ -1,0 +1,232 @@
+/* ==========================================================================
+   Hero Before / After
+   ========================================================================== */
+
+.hero-ba {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ── Slides ── */
+.hero-ba__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.hero-ba__slide--active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* ── Image layers ── */
+.hero-ba__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-ba__layer--after {
+  z-index: 2;
+}
+
+.hero-ba__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-ba__placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #1a1a1a;
+}
+
+/* ── Overlay headline ── */
+.hero-ba__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  pointer-events: none;
+}
+
+.hero-ba__headline {
+  color: #fff;
+  font-family: var(--font-heading, 'Helvetica Neue', Helvetica, Arial, sans-serif);
+  font-weight: 500;
+  font-size: 1.8rem;
+  line-height: 1.25;
+  max-width: 700px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.01em;
+}
+
+@media screen and (min-width: 750px) {
+  .hero-ba__headline {
+    font-size: 3rem;
+  }
+}
+
+/* ── Labels ── */
+.hero-ba__label {
+  position: absolute;
+  bottom: 2.4rem;
+  z-index: 5;
+  color: #fff;
+  font-family: var(--font-body, 'Helvetica Neue', Helvetica, Arial, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.hero-ba__label--before {
+  left: 2rem;
+}
+
+.hero-ba__label--after {
+  right: 2rem;
+}
+
+@media screen and (min-width: 750px) {
+  .hero-ba__label--before {
+    left: 3.2rem;
+  }
+
+  .hero-ba__label--after {
+    right: 3.2rem;
+  }
+}
+
+/* ── Handle ── */
+.hero-ba__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 6;
+  width: 2px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.hero-ba__handle-line {
+  position: absolute;
+  inset: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+
+.hero-ba__handle-grip {
+  position: relative;
+  z-index: 7;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.hero-ba__handle-grip:hover,
+.hero-ba__slide--active .hero-ba__handle:active .hero-ba__handle-grip {
+  transform: scale(1.12);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* ── Range input (invisible, covers entire slide for easy drag) ── */
+.hero-ba__range {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.hero-ba__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1px;
+  height: 100vh;
+}
+
+.hero-ba__range::-moz-range-thumb {
+  width: 1px;
+  height: 100vh;
+  border: none;
+  background: transparent;
+}
+
+/* ── Slide dots ── */
+.hero-ba__dots {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+}
+
+.hero-ba__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.hero-ba__dot--active {
+  background: #fff;
+  transform: scale(1.25);
+}
+
+.hero-ba__dot:hover:not(.hero-ba__dot--active) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Ensure no top gap (transparent header overlap) ── */
+.hero-before-after-section {
+  margin-top: 0 !important;
+}
+
+.hero-before-after-section + .section {
+  margin-top: var(--spacing-sections-mobile);
+}
+
+@media screen and (min-width: 750px) {
+  .hero-before-after-section + .section {
+    margin-top: var(--spacing-sections-desktop);
+  }
+}

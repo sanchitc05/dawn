@@ -1,0 +1,246 @@
+{{ 'hero-before-after.css' | asset_url | stylesheet_tag }}
+
+<div
+  id="hero-before-after-{{ section.id }}"
+  class="hero-ba"
+  data-section-id="{{ section.id }}"
+  data-auto-advance="5000"
+>
+  {% for block in section.blocks %}
+    <div
+      class="hero-ba__slide {% if forloop.first %}hero-ba__slide--active{% endif %}"
+      data-slide-index="{{ forloop.index0 }}"
+      {{ block.shopify_attributes }}
+    >
+      {%- comment -%} Before image (bottom layer) {%- endcomment -%}
+      <div class="hero-ba__layer hero-ba__layer--before">
+        {% if block.settings.before_image != blank %}
+          {{
+            block.settings.before_image
+            | image_url: width: 2400
+            | image_tag:
+              loading: 'eager',
+              sizes: '100vw',
+              widths: '600,900,1200,1800,2400',
+              class: 'hero-ba__img'
+          }}
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-ba__img hero-ba__placeholder' }}
+        {% endif %}
+      </div>
+
+      {%- comment -%} After image (top layer, clipped) {%- endcomment -%}
+      <div class="hero-ba__layer hero-ba__layer--after" style="clip-path: inset(0 50% 0 0);">
+        {% if block.settings.after_image != blank %}
+          {{
+            block.settings.after_image
+            | image_url: width: 2400
+            | image_tag:
+              loading: 'eager',
+              sizes: '100vw',
+              widths: '600,900,1200,1800,2400',
+              class: 'hero-ba__img'
+          }}
+        {% else %}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'hero-ba__img hero-ba__placeholder' }}
+        {% endif %}
+      </div>
+
+      {%- comment -%} Overlay content {%- endcomment -%}
+      <div class="hero-ba__overlay">
+        {% if block.settings.headline != blank %}
+          <h1 class="hero-ba__headline">{{ block.settings.headline }}</h1>
+        {% endif %}
+      </div>
+
+      {%- comment -%} Labels {%- endcomment -%}
+      <span class="hero-ba__label hero-ba__label--before">Before</span>
+      <span class="hero-ba__label hero-ba__label--after">After</span>
+
+      {%- comment -%} Slider handle {%- endcomment -%}
+      <div class="hero-ba__handle" style="left: 50%;">
+        <div class="hero-ba__handle-line"></div>
+        <div class="hero-ba__handle-grip">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5L3 12L8 19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 5L21 12L16 19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      {%- comment -%} Range input (accessible, drives slider) {%- endcomment -%}
+      <input
+        type="range"
+        class="hero-ba__range"
+        min="0"
+        max="100"
+        value="50"
+        aria-label="Before and after comparison slider"
+      >
+    </div>
+  {% endfor %}
+
+  {%- comment -%} Slide indicators {%- endcomment -%}
+  {% if section.blocks.size > 1 %}
+    <div class="hero-ba__dots">
+      {% for block in section.blocks %}
+        <button
+          class="hero-ba__dot {% if forloop.first %}hero-ba__dot--active{% endif %}"
+          data-dot-index="{{ forloop.index0 }}"
+          aria-label="Go to slide {{ forloop.index }}"
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  (function () {
+    const section = document.getElementById('hero-before-after-{{ section.id }}');
+    if (!section) return;
+
+    const slides = section.querySelectorAll('.hero-ba__slide');
+    const dots = section.querySelectorAll('.hero-ba__dot');
+    const autoAdvanceDelay = parseInt(section.dataset.autoAdvance, 10) || 5000;
+    let currentSlide = 0;
+    let autoTimer = null;
+
+    /* ── Per-slide comparison slider logic ── */
+    slides.forEach((slide) => {
+      const range = slide.querySelector('.hero-ba__range');
+      const afterLayer = slide.querySelector('.hero-ba__layer--after');
+      const handle = slide.querySelector('.hero-ba__handle');
+      if (!range || !afterLayer || !handle) return;
+
+      function updateSlider(value) {
+        const pct = value;
+        afterLayer.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        handle.style.left = pct + '%';
+      }
+
+      /* Range input change */
+      range.addEventListener('input', function () {
+        updateSlider(this.value);
+        resetAutoAdvance();
+      });
+
+      /* Pointer-based dragging (mouse + touch unified) */
+      let dragging = false;
+
+      function startDrag(e) {
+        dragging = true;
+        e.preventDefault();
+        resetAutoAdvance();
+      }
+
+      function onDrag(e) {
+        if (!dragging) return;
+        const rect = slide.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let pct = ((clientX - rect.left) / rect.width) * 100;
+        pct = Math.max(0, Math.min(100, pct));
+        range.value = pct;
+        updateSlider(pct);
+      }
+
+      function endDrag() {
+        dragging = false;
+      }
+
+      handle.addEventListener('mousedown', startDrag);
+      handle.addEventListener('touchstart', startDrag, { passive: false });
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('touchmove', onDrag, { passive: true });
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
+    });
+
+    /* ── Slide transition ── */
+    function goToSlide(index) {
+      if (slides.length <= 1) return;
+      slides[currentSlide].classList.remove('hero-ba__slide--active');
+      if (dots[currentSlide]) dots[currentSlide].classList.remove('hero-ba__dot--active');
+
+      currentSlide = index % slides.length;
+
+      slides[currentSlide].classList.add('hero-ba__slide--active');
+      if (dots[currentSlide]) dots[currentSlide].classList.add('hero-ba__dot--active');
+
+      /* Reset the new slide's slider to 50% */
+      const range = slides[currentSlide].querySelector('.hero-ba__range');
+      const afterLayer = slides[currentSlide].querySelector('.hero-ba__layer--after');
+      const handle = slides[currentSlide].querySelector('.hero-ba__handle');
+      if (range && afterLayer && handle) {
+        range.value = 50;
+        afterLayer.style.clipPath = 'inset(0 50% 0 0)';
+        handle.style.left = '50%';
+      }
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', function () {
+        goToSlide(parseInt(this.dataset.dotIndex, 10));
+        resetAutoAdvance();
+      });
+    });
+
+    /* ── Auto-advance ── */
+    function startAutoAdvance() {
+      if (slides.length <= 1) return;
+      autoTimer = setInterval(() => {
+        goToSlide(currentSlide + 1);
+      }, autoAdvanceDelay);
+    }
+
+    function resetAutoAdvance() {
+      clearInterval(autoTimer);
+      startAutoAdvance();
+    }
+
+    startAutoAdvance();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero Before After",
+  "tag": "section",
+  "class": "hero-before-after-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "before_image",
+          "label": "Before image"
+        },
+        {
+          "type": "image_picker",
+          "id": "after_image",
+          "label": "After image"
+        },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Headline",
+          "default": "Bring Sunlight to Spaces Where it is Not Possible to Have it"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Before After",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

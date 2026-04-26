@@ -1,0 +1,181 @@
+<div class="gallery-strip-section">
+  <div class="gallery-strip-header">
+    {% if section.settings.heading != blank %}
+      <h2 class="gallery-strip-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.gallery_link != blank %}
+      <a href="{{ section.settings.gallery_link }}" class="gallery-strip-link">VIEW GALLERY</a>
+    {% endif %}
+  </div>
+  
+  <div class="gallery-strip-wrapper">
+    <div class="gallery-strip-track">
+      {% for block in section.blocks %}
+        <div class="gallery-strip-item" {{ block.shopify_attributes }}>
+           {% if block.settings.image != blank %}
+             <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.image.alt | escape }}" class="gallery-strip-img" width="600" height="600" loading="lazy">
+           {% else %}
+             {{ 'image' | placeholder_svg_tag: 'gallery-strip-placeholder' }}
+           {% endif %}
+        </div>
+      {% endfor %}
+      
+      {% comment %} Duplicated blocks for seamless infinite scrolling {% endcomment %}
+      {% for block in section.blocks %}
+        <div class="gallery-strip-item" aria-hidden="true">
+           {% if block.settings.image != blank %}
+             <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.image.alt | escape }}" class="gallery-strip-img" width="600" height="600" loading="lazy">
+           {% else %}
+             {{ 'image' | placeholder_svg_tag: 'gallery-strip-placeholder' }}
+           {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+.gallery-strip-section {
+  background-color: #000;
+  padding-top: 80px;
+  padding-bottom: 80px;
+  color: #fff;
+  overflow: hidden;
+}
+
+.gallery-strip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 60px;
+  margin-bottom: 40px;
+}
+
+.gallery-strip-heading {
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  margin: 0;
+  color: #fff;
+  font-weight: 500;
+}
+
+.gallery-strip-link {
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-decoration: underline;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.gallery-strip-link:hover {
+  opacity: 0.8;
+}
+
+.gallery-strip-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.gallery-strip-track {
+  display: flex;
+  gap: 4px;
+  width: max-content;
+  animation: scroll-gallery 30s linear infinite;
+}
+
+.gallery-strip-wrapper:hover .gallery-strip-track {
+  animation-play-state: paused;
+}
+
+.gallery-strip-item {
+  height: 300px;
+  flex-shrink: 0;
+  background-color: #111; /* subtle background for placeholders */
+}
+
+.gallery-strip-img {
+  height: 100%;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.gallery-strip-placeholder {
+  height: 100%;
+  width: 400px;
+  display: block;
+  fill: #444;
+}
+
+@keyframes scroll-gallery {
+  0% { transform: translateX(0); }
+  /* Using calc(-50% - 2px) mathematically accounts exactly for 1 loop including half the gap */
+  100% { transform: translateX(calc(-50% - 2px)); } 
+}
+
+@media screen and (max-width: 768px) {
+  .gallery-strip-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 20px;
+    gap: 15px;
+  }
+  .gallery-strip-heading {
+    font-size: 1.5rem;
+  }
+  .gallery-strip-item {
+    height: 200px;
+  }
+  .gallery-strip-placeholder {
+    width: 250px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Gallery Strip",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "SUNROOOF in Real Spaces"
+    },
+    {
+      "type": "url",
+      "id": "gallery_link",
+      "label": "Gallery Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gallery_image",
+      "name": "Gallery Image",
+      "limit": 14,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gallery Strip",
+      "blocks": [
+        { "type": "gallery_image" },
+        { "type": "gallery_image" },
+        { "type": "gallery_image" },
+        { "type": "gallery_image" },
+        { "type": "gallery_image" },
+        { "type": "gallery_image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

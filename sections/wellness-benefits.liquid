@@ -1,0 +1,107 @@
+{{ 'wellness-benefits.css' | asset_url | stylesheet_tag }}
+
+<section class="wellness-benefits" id="wellness-benefits-{{ section.id }}">
+  <div class="wellness-benefits__container">
+    {% if section.settings.section_heading != blank %}
+      <h2 class="wellness-benefits__heading">{{ section.settings.section_heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.intro_text != blank %}
+      <p class="wellness-benefits__intro">{{ section.settings.intro_text }}</p>
+    {% endif %}
+
+    <div class="wellness-benefits__grid">
+      {% for block in section.blocks %}
+        <div class="wellness-benefits__card" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <div class="wellness-benefits__image-wrapper">
+              <img
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                alt="{{ block.settings.heading | escape }}"
+                loading="lazy"
+                width="800"
+                height="800"
+                class="wellness-benefits__image"
+              >
+            </div>
+          {% endif %}
+
+          {% if block.settings.heading != blank %}
+            <h3 class="wellness-benefits__card-heading">{{ block.settings.heading }}</h3>
+          {% endif %}
+
+          {% if block.settings.body != blank %}
+            <p class="wellness-benefits__card-body">{{ block.settings.body }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Wellness Benefits",
+  "tag": "section",
+  "class": "wellness-benefits-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading",
+      "default": "Lighting that brings health and wellness"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Intro Text",
+      "default": "We spend 90% of our time indoors, missing all the vital benefits of sunlight. SUNROOOF's patented lighting technology brings all the psychological benefits inside indoors such as better mood, more energy, and enhanced productivity."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wellness Benefits",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "heading": "Brings Happiness and Feeling of Joy",
+            "body": "SUNROOOF makes us feel more relaxed, calm and happier when we are under it, reducing a lot of our stress..."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "heading": "Increases focus and concentration",
+            "body": "With SUNROOOF your focus increases substantially as it releases serotonin, a chemical meant to sharpen concentration..."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

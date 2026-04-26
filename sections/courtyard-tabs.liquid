@@ -1,0 +1,445 @@
+<style>
+  .courtyard-tabs-section-{{ section.id }} {
+    padding: 100px 60px;
+    background-color: #000000;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .courtyard-tabs-header {
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 800px;
+  }
+
+  .courtyard-tabs-heading {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+  }
+
+  .courtyard-tabs-subtext {
+    font-size: 1.125rem;
+    color: #ffffff;
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  .courtyard-tabs-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+  }
+
+  .courtyard-tab-main {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 500;
+    opacity: 0.4;
+    cursor: pointer;
+    padding: 0 0 8px 0;
+    position: relative;
+    transition: opacity 0.3s ease;
+  }
+
+  .courtyard-tab-main.active {
+    opacity: 1;
+  }
+
+  .courtyard-tab-main.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ffffff;
+  }
+
+  .courtyard-tabs-subnavigation-container {
+    margin-bottom: 40px;
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .courtyard-tabs-subnavigation {
+    display: none;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .courtyard-tabs-subnavigation.active {
+    display: flex;
+  }
+
+  .courtyard-tab-sub {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 30px;
+    color: #ffffff;
+    padding: 8px 24px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+  }
+
+  .courtyard-tab-sub.active,
+  .courtyard-tab-sub:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #ffffff;
+    opacity: 1;
+  }
+
+  .courtyard-tabs-images {
+    width: 100%;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 60vh;
+    min-height: 400px;
+    max-width: 1400px;
+  }
+
+  .courtyard-tab-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .courtyard-tab-image.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .courtyard-tab-image img,
+  .courtyard-tab-image svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .courtyard-tab-image svg {
+    background-color: #222222;
+  }
+
+  @media screen and (max-width: 768px) {
+    .courtyard-tabs-section-{{ section.id }} {
+      padding: 60px 20px;
+    }
+
+    .courtyard-tabs-heading {
+      font-size: 2rem;
+    }
+
+    .courtyard-tabs-navigation {
+      gap: 20px;
+    }
+
+    .courtyard-tab-main {
+      font-size: 1.125rem;
+    }
+
+    .courtyard-tab-sub {
+      padding: 6px 16px;
+      font-size: 0.875rem;
+    }
+
+    .courtyard-tabs-images {
+      height: 40vh;
+      min-height: 300px;
+    }
+  }
+</style>
+
+<div class="courtyard-tabs-section-{{ section.id }}" id="CourtyardTabs-{{ section.id }}">
+  <div class="courtyard-tabs-header">
+    {% if section.settings.heading != blank %}
+      <h2 class="courtyard-tabs-heading">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+    {% if section.settings.subtext != blank %}
+      <p class="courtyard-tabs-subtext">{{ section.settings.subtext | escape }}</p>
+    {% endif %}
+  </div>
+
+  <div class="courtyard-tabs-navigation">
+    <button class="courtyard-tab-main active" data-category="Commercial">Commercial</button>
+    <button class="courtyard-tab-main" data-category="Residential">Residential</button>
+  </div>
+
+  <div class="courtyard-tabs-subnavigation-container">
+    <div class="courtyard-tabs-subnavigation active" data-category="Commercial">
+      {% assign first_commercial = true %}
+      {% for block in section.blocks %}
+        {% if block.settings.category == 'Commercial' %}
+          <button
+            class="courtyard-tab-sub {% if first_commercial %}active{% endif %}"
+            data-target="image-{{ block.id }}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.label | escape }}
+          </button>
+          {% assign first_commercial = false %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="courtyard-tabs-subnavigation" data-category="Residential">
+      {% assign first_residential = true %}
+      {% for block in section.blocks %}
+        {% if block.settings.category == 'Residential' %}
+          <button
+            class="courtyard-tab-sub {% if first_residential %}active{% endif %}"
+            data-target="image-{{ block.id }}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.label | escape }}
+          </button>
+          {% assign first_residential = false %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="courtyard-tabs-images">
+    {% assign first_commercial_img = true %}
+    {% for block in section.blocks %}
+      {% if block.settings.category == 'Commercial' %}
+        <div class="courtyard-tab-image {% if first_commercial_img %}active{% endif %}" id="image-{{ block.id }}">
+          {% if block.settings.image %}
+            {{ block.settings.image | image_url: width: 2000 | image_tag: loading: 'lazy' }}
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+        {% assign first_commercial_img = false %}
+      {% endif %}
+    {% endfor %}
+
+    {% for block in section.blocks %}
+      {% if block.settings.category == 'Residential' %}
+        <div class="courtyard-tab-image" id="image-{{ block.id }}">
+          {% if block.settings.image %}
+            {{ block.settings.image | image_url: width: 2000 | image_tag: loading: 'lazy' }}
+          {% else %}
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    function initCourtyardTabs(section) {
+      const mainTabs = section.querySelectorAll('.courtyard-tab-main');
+      const subNavs = section.querySelectorAll('.courtyard-tabs-subnavigation');
+      const subTabs = section.querySelectorAll('.courtyard-tab-sub');
+      const images = section.querySelectorAll('.courtyard-tab-image');
+
+      if (!mainTabs.length) return;
+
+      mainTabs.forEach((tab) => {
+        tab.addEventListener('click', function () {
+          mainTabs.forEach((t) => t.classList.remove('active'));
+          this.classList.add('active');
+
+          const category = this.getAttribute('data-category');
+
+          subNavs.forEach((nav) => {
+            if (nav.getAttribute('data-category') === category) {
+              nav.classList.add('active');
+              // Trigger the first sub-tab automatically when switching main tabs
+              const firstSubTab = nav.querySelector('.courtyard-tab-sub');
+              if (firstSubTab) {
+                firstSubTab.click();
+              }
+            } else {
+              nav.classList.remove('active');
+            }
+          });
+        });
+      });
+
+      subTabs.forEach((subTab) => {
+        subTab.addEventListener('click', function () {
+          const parentNav = this.closest('.courtyard-tabs-subnavigation');
+          if (parentNav) {
+            const siblings = parentNav.querySelectorAll('.courtyard-tab-sub');
+            siblings.forEach((t) => t.classList.remove('active'));
+          }
+          this.classList.add('active');
+
+          const targetId = this.getAttribute('data-target');
+
+          images.forEach((img) => {
+            if (img.id === targetId) {
+              img.classList.add('active');
+            } else {
+              img.classList.remove('active');
+            }
+          });
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const section = document.getElementById('CourtyardTabs-{{ section.id }}');
+      if (section) {
+        initCourtyardTabs(section);
+      }
+    });
+
+    document.addEventListener('shopify:section:load', function (event) {
+      const section = event.target.querySelector('#CourtyardTabs-{{ section.id }}');
+      if (section) {
+        initCourtyardTabs(section);
+      }
+    });
+
+    document.addEventListener('shopify:block:select', function (event) {
+      const blockId = event.detail.blockId;
+      const section = document.getElementById('CourtyardTabs-{{ section.id }}');
+      if (!section) return;
+
+      const selectedSubTab = section.querySelector(`.courtyard-tab-sub[data-target="image-${blockId}"]`);
+      if (selectedSubTab) {
+        const parentNav = selectedSubTab.closest('.courtyard-tabs-subnavigation');
+        if (parentNav && !parentNav.classList.contains('active')) {
+          const category = parentNav.getAttribute('data-category');
+          const mainTab = section.querySelector(`.courtyard-tab-main[data-category="${category}"]`);
+          if (mainTab) mainTab.click();
+        }
+        selectedSubTab.click();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Courtyard Tabs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Courtyard experience anywhere"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Explore how SUNROOOF transforms different environments."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab_item",
+      "name": "Tab Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Category",
+          "options": [
+            { "value": "Commercial", "label": "Commercial" },
+            { "value": "Residential", "label": "Residential" }
+          ],
+          "default": "Commercial"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Lounge"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Courtyard Tabs",
+      "blocks": [
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Commercial",
+            "label": "Lounge"
+          }
+        },
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Commercial",
+            "label": "Office"
+          }
+        },
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Commercial",
+            "label": "Wellness Centers"
+          }
+        },
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Commercial",
+            "label": "Retail Store"
+          }
+        },
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Residential",
+            "label": "Living Room"
+          }
+        },
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Residential",
+            "label": "Bedroom"
+          }
+        },
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Residential",
+            "label": "Kitchen"
+          }
+        },
+        {
+          "type": "tab_item",
+          "settings": {
+            "category": "Residential",
+            "label": "Basements"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

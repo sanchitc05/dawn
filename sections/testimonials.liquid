@@ -1,0 +1,253 @@
+<div class="testimonials-section">
+  <!-- ====== Stat Bar ====== -->
+  {% if section.settings.stat_text != blank %}
+    <p class="testimonials-stat">{{ section.settings.stat_text }}</p>
+  {% endif %}
+
+  <!-- ====== Scrolling Review Cards ====== -->
+  <div class="testimonials-wrapper">
+    <div class="testimonials-track">
+      {% for block in section.blocks %}
+        <div class="testimonials-card" {{ block.shopify_attributes }}>
+          {% if block.settings.source != blank %}
+            <span class="testimonials-source">{{ block.settings.source }}</span>
+          {% endif %}
+
+          <div class="testimonials-stars">
+            {% assign filled = block.settings.rating %}
+            {% for i in (1..5) %}
+              {% if i <= filled %}
+                <span class="testimonials-star filled">★</span>
+              {% else %}
+                <span class="testimonials-star empty">★</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if block.settings.review_text != blank %}
+            <p class="testimonials-text">{{ block.settings.review_text }}</p>
+          {% endif %}
+
+          {% if block.settings.author != blank %}
+            <span class="testimonials-author">{{ block.settings.author }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      {% comment %} Duplicate for seamless infinite scroll {% endcomment %}
+      {% for block in section.blocks %}
+        <div class="testimonials-card" aria-hidden="true">
+          {% if block.settings.source != blank %}
+            <span class="testimonials-source">{{ block.settings.source }}</span>
+          {% endif %}
+
+          <div class="testimonials-stars">
+            {% assign filled = block.settings.rating %}
+            {% for i in (1..5) %}
+              {% if i <= filled %}
+                <span class="testimonials-star filled">★</span>
+              {% else %}
+                <span class="testimonials-star empty">★</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if block.settings.review_text != blank %}
+            <p class="testimonials-text">{{ block.settings.review_text }}</p>
+          {% endif %}
+
+          {% if block.settings.author != blank %}
+            <span class="testimonials-author">{{ block.settings.author }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+/* ── Section ── */
+.testimonials-section {
+  background-color: #000;
+  padding: 100px 60px;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* ── Stat bar ── */
+.testimonials-stat {
+  text-align: center;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+  color: #fff;
+  margin: 0 0 0 0;
+  padding-bottom: 60px;
+  line-height: 1.4;
+}
+
+/* ── Scroll wrapper ── */
+.testimonials-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.testimonials-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: scroll-testimonials 40s linear infinite;
+}
+
+.testimonials-wrapper:hover .testimonials-track {
+  animation-play-state: paused;
+}
+
+/* ── Card ── */
+.testimonials-card {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 28px;
+  min-width: 320px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+/* ── Source tag ── */
+.testimonials-source {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+}
+
+/* ── Stars ── */
+.testimonials-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.testimonials-star {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.testimonials-star.filled {
+  color: #f5a623;
+}
+
+.testimonials-star.empty {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Review text ── */
+.testimonials-text {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Author ── */
+.testimonials-author {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+/* ── Scroll animation ── */
+@keyframes scroll-testimonials {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 10px)); }
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+  .testimonials-section {
+    padding: 60px 20px;
+  }
+
+  .testimonials-stat {
+    font-size: 1rem;
+    padding-bottom: 40px;
+  }
+
+  .testimonials-card {
+    min-width: 280px;
+    max-width: 280px;
+    padding: 24px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "stat_text",
+      "label": "Stat Text",
+      "default": "600+ customers and 800+ sites delivered"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "source",
+          "label": "Source",
+          "default": "Google"
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Text",
+          "default": "Amazing product and seamless installation. Transformed our space completely."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author Name",
+          "default": "Customer"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}
